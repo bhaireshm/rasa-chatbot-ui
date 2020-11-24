@@ -43,7 +43,7 @@ $(() => {
   });
 
   renderMessages(MESSAGES);
-  $(".chatbox-open").click();
+  // $(".chatbox-open").click();
   scroll();
 });
 
