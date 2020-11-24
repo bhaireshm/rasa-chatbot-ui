@@ -2,7 +2,7 @@ export const CHAT = {
     messages: [{}],
     messageTemplate: function (data, position = "") {
         return `<div class="message ${data.position}">
-                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
+                    <img src="./img/${data.position == 'right' ? '1': '2'}_copy.jpg" />
                     <div class="bubble">
                     ${data.msg}
                     <div class="corner"></div>

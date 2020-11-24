@@ -50,7 +50,7 @@ $(() => {
 
 function sendMessage(msg) {
   let message = `<div class="message right">
-                  <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
+                  <img src="./img/2_copy.jpg" />
                   <div class="bubble">
                     ${msg}
                     <div class="corner"></div>
