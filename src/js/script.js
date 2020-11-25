@@ -1,12 +1,15 @@
 "use strict";
 
 import {
-  CHATBOT
+  CHATBOT_SERVICE
 } from "./chat-service.js";
 import {
   CHAT,
   MESSAGES
 } from "./chats.js";
+
+var chat = new CHATBOT_SERVICE();
+chat.setUserId('bhairesh');
 
 $(() => {
   $(".chatbox-open").click(() => {
@@ -36,14 +39,17 @@ $(() => {
     $(".chatbox-open").fadeIn();
   });
 
+
   $('#sendBtn').on('click', function () {
     let msg = $('#messageBox').val();
     console.log(msg);
-    sendMessage(msg);
+
+    chat.sendMessage(msg);
+    // sendMessage(msg);
   });
 
   renderMessages(MESSAGES);
-  // $(".chatbox-open").click();
+  $(".chatbox-open").click();
   scroll();
 });
 
