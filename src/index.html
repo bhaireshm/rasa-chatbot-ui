@@ -25,7 +25,7 @@
   <section class="chatbox-popup">
     <header class="chatbox-popup__header">
       <aside style="flex:3">
-        <i class="fa fa-user-circle fa-4x chatbox-popup__avatar" aria-hidden="true"></i>
+        <img src="./img/bot.svg" alt="Aritha Bot" class="img-fluid w-75">
       </aside>
       <aside style="flex:8">
         <h1>Aritha Bot</h1> Agent (Online)
@@ -33,58 +33,16 @@
       <!-- <aside style="flex:1">
         <button class="chatbox-maximize"><i class="fa fa-window-maximize" aria-hidden="true"></i></button>
       </aside> -->
+      <aside style="flex:1">
+        <button class="restart-chat"><i class="fa fa-refresh" title="Restart chat" aria-hidden="true"></i></button>
+      </aside>
     </header>
     <main class="chatbox-popup__main">
-      <!-- We make it simple and seamless for<br> bussiness and people to talk to each<br> other. Ask us anything. -->
+      <div class="welcome-message d-none">
+        We make it simple and seamless for<br> bussiness and people to talk to each<br> other. Ask us anything.
+      </div>
 
       <div id="chat-messages" class="animate">
-        <label>Thursday 02</label>
-
-        <div class="message">
-          <img src="./img/1_copy.jpg" />
-          <div class="bubble">
-            Really cool stuff!
-            <div class="corner"></div>
-            <span>3 min</span>
-          </div>
-        </div>
-
-        <div class="message right">
-          <img src="./img/2_copy.jpg" />
-          <div class="bubble">
-            Can you share a link for the tutorial?
-            <div class="corner"></div>
-            <span>1 min</span>
-          </div>
-        </div>
-
-        <div class="message">
-          <img src="./img/1_copy.jpg" />
-          <div class="bubble">
-            Yeah, hold on
-            <div class="corner"></div>
-            <span>Now</span>
-          </div>
-        </div>
-
-        <div class="message right">
-          <img src="./img/2_copy.jpg" />
-          <div class="bubble">
-            Can you share a link for the tutorial?
-            <div class="corner"></div>
-            <span>1 min</span>
-          </div>
-        </div>
-
-        <div class="message">
-          <img src="./img/1_copy.jpg" />
-          <div class="bubble">
-            Yeah, hold on
-            <div class="corner"></div>
-            <span>Now</span>
-          </div>
-        </div>
-
       </div>
 
     </main>
@@ -93,7 +51,7 @@
         <i class="fa fa-camera" aria-hidden="true"></i>
       </aside> -->
       <aside style="flex:11">
-        <textarea type="text" id="messageBox" class="border rounded" placeholder="Type your message here..."
+        <textarea type="text" id="messageBox" placeholder="Type your message here..."
           autofocus></textarea>
       </aside>
       <aside style="flex:1;color:#888;text-align:center;" id="sendBtn">
@@ -130,10 +88,12 @@
     </footer>
   </section> -->
   <!-- partial -->
+
+  <!-- Core JS -->
   <script src='./js/core/jquery.min.js'></script>
   <script src="./js/core/bootstrap.min.js"></script>
-  <script type="module" src="./js/script.js"></script>
-
+  
+  <script type="module" src="./js/index.js"></script>
 </body>
 
 </html>

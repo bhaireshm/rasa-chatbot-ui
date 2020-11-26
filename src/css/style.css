@@ -141,7 +141,7 @@ textarea::placeholder {
 .chatbox-popup .chatbox-popup__main {
   box-sizing: border-box;
   width: 100%;
-  padding: calc(2 * 8px) 16px;
+  padding: calc(2 * 8px) 2px;
   line-height: calc(16px + 16px / 2);
   color: #888;
   text-align: center;
@@ -204,7 +204,7 @@ textarea::placeholder {
   display: -webkit-box;
   display: flex;
   width: 100%;
-  padding: 16px;
+  padding: 8px;
   border-top: 1px solid #ddd;
   -webkit-box-align: center;
   align-items: center;
@@ -219,7 +219,7 @@ textarea::placeholder {
   height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 20px;
+  padding-right: 10px;
   -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
   -moz-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
   -ms-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
@@ -236,27 +236,27 @@ textarea::placeholder {
   font-size: 12px;
   text-align: center;
   margin: 15px 0;
-  width: 290px;
+  /* width: 290px; */
   display: block;
 }
 #chat-messages div.message {
-  padding: 0 0 30px 58px;
+  padding: 0 0 30px 50px;
   clear: both;
-  margin-bottom: 45px;
+  margin-bottom: 35px;
 }
 #chat-messages div.message.right {
   padding: 0 58px 30px 0;
   margin-right: -19px;
   margin-left: 19px;
 }
-#chat-messages .message img {
+#chat-messages .message img:not(.respImage) {
   float: left;
   margin-left: -38px;
   border-radius: 50%;
   width: 30px;
   margin-top: 12px;
 }
-#chat-messages div.message.right img {
+#chat-messages div.message.right img:not(.respImage) {
   float: right;
   margin-left: 0;
   margin-right: -38px;
@@ -266,14 +266,14 @@ textarea::placeholder {
   font-size: 13px;
   font-weight: 600;
   padding: 12px 13px;
-  border-radius: 5px 5px 5px 0px;
+  border-radius: 20px 20px 20px 0px;
   color: #8495a3;
   position: relative;
   float: left;
 }
 #chat-messages div.message.right .bubble {
   float: right;
-  border-radius: 5px 5px 0px 5px;
+  border-radius: 20px 20px 0px 20px;
 }
 .bubble .corner {
   background: url("./../img/bubble-corner.png") 0 0 no-repeat;
@@ -294,4 +294,103 @@ div.message.right .corner {
   position: absolute;
   right: 0;
   bottom: -22px;
+}
+
+.chat-bubble {
+  background-color: #e6f8f1;
+  padding: 16px 28px;
+  -webkit-border-radius: 20px;
+  -webkit-border-bottom-left-radius: 2px;
+  -moz-border-radius: 20px;
+  -moz-border-radius-bottomleft: 2px;
+  border-radius: 20px;
+  border-bottom-left-radius: 2px;
+  display: inline-block;
+}
+.typing {
+  align-items: center;
+  display: flex;
+  height: 17px;
+}
+
+.typing .dot {
+  animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
+  background-color: #6cad96;
+  /* rgba(20,105,69,.7); */
+  border-radius: 50%;
+  height: 7px;
+  margin-right: 4px;
+  vertical-align: middle;
+  width: 7px;
+  display: inline-block;
+}
+.typing .dot:nth-child(1) {
+  animation-delay: 200ms;
+}
+.typing .dot:nth-child(2) {
+  animation-delay: 300ms;
+}
+.typing .dot:nth-child(3) {
+  animation-delay: 400ms;
+}
+.typing .dot:last-child {
+  margin-right: 0;
+}
+
+@keyframes mercuryTypingAnimation {
+  0% {
+    transform: translateY(0px);
+    background-color: #6cad96;
+    /* rgba(20,105,69,.7); */
+  }
+  28% {
+    transform: translateY(-7px);
+    background-color: #9ecab9;
+    /* rgba(20,105,69,.4); */
+  }
+  44% {
+    transform: translateY(0px);
+    background-color: #b5d9cb;
+    /* rgba(20,105,69,.2); */
+  }
+}
+
+/* css for quick replies */
+
+.quickReplies {
+  padding: 5px;
+  position: relative;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  transition: all 0.2s;
+  transform: scale(0.98);
+  will-change: transform;
+  user-select: none;
+  cursor: pointer;
+  scroll-behavior: smooth;
+}
+
+.quickReplies::-webkit-scrollbar {
+  width: 0 !important
+}
+
+.quickReplies.active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  transform: scale(1);
+}
+
+.chip {
+  background-color: white;
+  border: 1px solid #2c53af;
+  color: #2c53af;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.chip:hover {
+  background-color: #2c53af;
+  color: white;
 }
