@@ -3,7 +3,8 @@ const CHAT = {
     messages: [{}],
 }
 const botResponse = (data) => {
-    let bubble = '';
+    let bubble = '',
+        addNewClass = '';
 
     if (data.hasOwnProperty("text")) {
         bubble = `${data.text}<div class="corner"></div>`;
@@ -11,7 +12,9 @@ const botResponse = (data) => {
 
     //check if the response contains "images"
     if (data.hasOwnProperty("image")) {
-        bubble = `<img src="${data.image}" alt="image" class="img-fluid w-75 respImage"><div class="corner"></div>`;
+        bubble = `<img src="${data.image}" alt="image" class="img-fluid respImage"><div class="corner"></div>`;
+        addNewClass = 'mb-3';
+        scrollDown(1000);
     }
 
     //check if the response contains "buttons" 
@@ -60,7 +63,7 @@ const botResponse = (data) => {
 
     return `<div class="message">
                 <img src="./img/bot.svg" />
-                <div class="bubble">
+                <div class="bubble ${addNewClass}">
                     ${bubble}
                 </div>
             </div>`;
@@ -77,9 +80,11 @@ const randomStr = (length = 16) => {
     return res;
 }
 
-const scrollDown = () => {
-    var objDiv = document.getElementById("chat-messages");
-    objDiv.scrollTop = objDiv.scrollHeight;
+const scrollDown = (time = 0) => {
+    setTimeout(() => {
+        var objDiv = document.getElementById("chat-messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }, time)
 }
 
 const clearMessageBox = () => {
@@ -91,18 +96,15 @@ const renderMessages = (data = []) => {
     console.log(data)
     setTimeout(function () {
         hideBotTyping();
-
-        // if (data.length < 1) {
-        // } 
-        // else if (data.length > 1) {
-        // $('#chat-messages').children('.message').remove();
-        data.forEach(d => {
-            let msg = botResponse(d);
-            $('#chat-messages').append(msg).fadeIn(1000);
-        });
-
-        scrollDown();
-        // }
+        if (data.length === 0) {
+            fallbackMessage();
+        } else {
+            data.forEach(d => {
+                let msg = botResponse(d);
+                $('#chat-messages').append(msg).fadeIn(1000);
+            });
+            scrollDown();
+        }
     }, 500);
 }
 
@@ -120,6 +122,17 @@ const renderHistory = (data = []) => {
     }
 }
 
+const fallbackMessage = () => {
+    var fallbackMsg = `<div class="message">
+                            <img src="./img/bot.svg" />
+                            <div class="bubble">
+                            I am facing some issues, please try again later!!!<div class="corner"></div>
+                            </div>
+                        </div>`;
+    $('#chat-messages').append(fallbackMsg).fadeIn(1000);
+    scrollDown();
+}
+
 //=============== Set user response ===================
 const setUserResponse = (msg) => {
     var UserResponse = `<div class="message right">
@@ -134,6 +147,26 @@ const setUserResponse = (msg) => {
     scrollDown();
 }
 
+const showBotTyping = () => {
+    var botTyping = `
+                <div class="message" id="botTyping">
+                    <img src="./img/bot.svg" />
+                    <div class="bubble">
+                        <div class="typing">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </div>`
+    $(botTyping).appendTo("#chat-messages");
+    scrollDown();
+}
+
+const hideBotTyping = () => {
+    $('#botTyping').remove();
+}
+
 function renderPdfAttachment(data) {
     pdf_url = data.custom.url;
     pdf_title = data.custom.title;
@@ -146,35 +179,15 @@ function renderPdfAttachment(data) {
         '</div>' +
         '</div>' +
         '</div>'
-    $(".chats").append(pdf_attachment);
+    $("#chat-messages").append(pdf_attachment);
     scrollDown();
-}
-
-function showBotTyping() {
-    var botTyping = `
-                <div class="message" id="botTyping">
-                    <img src="./img/bot.svg" />
-                    <div class="chat-bubble bubble">
-                        <div class="typing">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                        </div>
-                    </div>
-                </div>`
-    $(botTyping).appendTo("#chat-messages");
-    scrollDown();
-}
-
-function hideBotTyping() {
-    $('#botTyping').remove();
 }
 
 // //============== Cards Carousel ================
 // function showCardsCarousel(cardsToAdd) {
 //     var cards = createCardsCarousel(cardsToAdd);
 
-//     $(cards).appendTo(".chats").show();
+//     $(cards).appendTo("#chat-messages").show();
 
 
 //     if (cardsToAdd.length <= 2) {
@@ -237,7 +250,7 @@ function hideBotTyping() {
 //     }
 
 //     var quickReplies = '<div class="quickReplies">' + chips + '</div><div class="clearfix"></div>'
-//     $(quickReplies).appendTo(".chats").fadeIn(1000);
+//     $(quickReplies).appendTo("#chat-messages").fadeIn(1000);
 //     scrollDown();
 //     const slider = document.querySelector('.quickReplies');
 //     let isDown = false;
@@ -281,12 +294,12 @@ function hideBotTyping() {
 
 // });
 
-// //============== Suggestions ================
+//============== Suggestions ================
 // function addSuggestion(textToAdd) {
 //     setTimeout(function () {
 //         var suggestions = textToAdd;
 //         var suggLength = textToAdd.length;
-//         $(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+//         $(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo("#chat-messages").hide().fadeIn(1000);
 //         // Loop through suggestions
 //         for (i = 0; i < suggLength; i++) {
 //             $('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
@@ -295,18 +308,18 @@ function hideBotTyping() {
 //     }, 1000);
 // }
 
-// on click of suggestions, get the value and send to rasa
-$(document).on("click", ".menu .menuChips", function () {
-    var text = this.innerText;
-    var payload = this.getAttribute('data-payload');
-    console.log("payload: ", this.getAttribute('data-payload'))
-    setUserResponse(text);
-    send(payload);
+// // on click of suggestions, get the value and send to rasa
+// $(document).on("click", ".menu .menuChips", function () {
+//     var text = this.innerText;
+//     var payload = this.getAttribute('data-payload');
+//     console.log("payload: ", this.getAttribute('data-payload'))
+//     setUserResponse(text);
+//     // send(payload);
 
-    //delete the suggestions once user click on it
-    $(".suggestions").remove();
+//     //delete the suggestions once user click on it
+//     $(".suggestions").remove();
 
-});
+// });
 
 export {
     CHAT,

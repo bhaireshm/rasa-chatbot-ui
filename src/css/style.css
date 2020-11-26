@@ -296,17 +296,6 @@ div.message.right .corner {
   bottom: -22px;
 }
 
-.chat-bubble {
-  background-color: #e6f8f1;
-  padding: 16px 28px;
-  -webkit-border-radius: 20px;
-  -webkit-border-bottom-left-radius: 2px;
-  -moz-border-radius: 20px;
-  -moz-border-radius-bottomleft: 2px;
-  border-radius: 20px;
-  border-bottom-left-radius: 2px;
-  display: inline-block;
-}
 .typing {
   align-items: center;
   display: flex;
@@ -373,7 +362,7 @@ div.message.right .corner {
 }
 
 .quickReplies::-webkit-scrollbar {
-  width: 0 !important
+  width: 0 !important;
 }
 
 .quickReplies.active {
@@ -393,4 +382,9 @@ div.message.right .corner {
 .chip:hover {
   background-color: #2c53af;
   color: white;
+}
+
+.respImage {
+  max-height: 250px;
+  border-radius: 15px !important;
 }
