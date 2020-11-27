@@ -4,7 +4,11 @@ import {
     renderMessages,
     renderHistory,
     showBotTyping,
-    hideBotTyping
+    hideBotTyping,
+    hideWelcomeMessage,
+    showWelcomeMessage,
+    removeChats,
+    fallbackMessage
 } from "./chats.js";
 
 export class CHATBOT_SERVICE {
@@ -35,17 +39,37 @@ export class CHATBOT_SERVICE {
                 success: (res) => {
                     console.log(res);
                     this.messages = [];
-                    res.forEach(r => {
-                        r['event'] = 'bot';
-                        r['timestamp'] = new Date().getTime();
-                        this.messages.push(r);
-                    });
-                    renderMessages(this.messages);
-                    $('#sendBtn').prop('disabled', true);
+
+                    // if user wants to restart the chat and clear the existing chat contents
+                    if (msg.toLowerCase() == '/restart') {
+                        removeChats();
+                        showWelcomeMessage();
+                        fallbackMessage('Chat restarted');
+                        console.info('User Data cleared');
+
+                        //if you want the bot to start the conversation after restart
+                        // action_trigger();
+                        return;
+                    } else {
+                        res.forEach(r => {
+                            r['event'] = 'bot';
+                            r['timestamp'] = new Date().getTime();
+                            this.messages.push(r);
+                        });
+                        renderMessages(this.messages);
+                        $('#sendBtn').prop('disabled', true);
+                    }
                 },
-                error: (err) => {
-                    console.log(err);
+                error: (xhr, textStatus, errorThrown) => {
                     hideBotTyping();
+                    if (msg.toLowerCase() == '/restart') {
+                        //if you want the bot to start the conversation after the restart action.
+                        // action_trigger();
+                        // return;
+                    }
+                    // if there is no response from rasa server
+                    // setBotResponse("");
+                    console.log("Error from bot end: ", textStatus);
                 }
             });
         }
@@ -66,7 +90,8 @@ export class CHATBOT_SERVICE {
                             }
                         });
                         renderHistory(this.messages);
-                        // console.log(this.messages);
+                        console.log(this.messages);
+                        this.messages.length > 0 ? hideWelcomeMessage() : showWelcomeMessage();
                     }
                 },
                 error: (err) => {
@@ -74,17 +99,31 @@ export class CHATBOT_SERVICE {
                 }
             });
         } else {
-            $('.welcome-message').removeClass('d-none').addClass('d-block');
+            showWelcomeMessage();
         }
     };
 
     restartChat = () => {
         if (this._userId) {
-            localStorage.getItem('user_unique_id') ? localStorage.removeItem('user_unique_id') : null;
-            $('#chat-messages').children('.message').remove();
-            console.info('User Data cleared');
-        } else {
-            $('.welcome-message').removeClass('d-none').addClass('d-block');
+            this.sendMessage('/restart');
+            // $.ajax({
+            //     url: `${this.origin}/conversations/${this._userId}/tracker/events`,
+            //     method: 'POST',
+            //     data: {
+            //         "event": "restart"
+            //     },
+            //     success: (res) => {
+            //         console.log(res);
+            //         this.messages = [];
+            //         $('#chat-messages').children('.message').remove();
+            //         showWelcomeMessage();
+            //         console.info('User Data cleared');
+            //         if (res && res.events.length > 0) {}
+            //     },
+            //     error: (err) => {
+            //         console.log(err);
+            //     }
+            // });
         }
-    }
+    };
 }

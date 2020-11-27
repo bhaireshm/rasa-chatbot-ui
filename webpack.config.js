@@ -1,9 +1,15 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/js/script.js',
+    entry: './src/js/chats.js',
+    module: {
+        rules: [{
+            test: /\.txt$/,
+            use: 'raw-loader'
+        }]
+    },
     output: {
-        filename: 'main.js',
+        filename: 'chatbot.bundle.js',
         path: path.resolve(__dirname, 'dist'),
     },
 };

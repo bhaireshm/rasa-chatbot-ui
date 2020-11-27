@@ -1,7 +1,91 @@
-const CHAT = {
-    userId: localStorage.getItem('user_unique_id') ? localStorage.getItem('user_unique_id') : '',
-    messages: [{}],
+"use strict";
+
+import {
+    CHATBOT_SERVICE
+} from "./chat-service.js";
+
+var chat_service = new CHATBOT_SERVICE();
+
+if (localStorage.getItem('user_unique_id')) {
+    chat_service.setUserId(localStorage.getItem('user_unique_id'));
+    console.log(localStorage.getItem('user_unique_id'))
+} else {
+    // setInterval(() => {
+    let id = randomStr();
+    chat_service.setUserId(id);
+    localStorage.setItem('user_unique_id', id);
+    // }, 3000);
 }
+
+$(() => {
+    chat_service.fetchUserMessagesHistory();
+    showWelcomeMessage();
+
+    $(".chatbox-open").click();
+});
+
+$(".chatbox-open").click(() => {
+    $(".chatbox-popup, .chatbox-close").fadeIn();
+    $('#chatview').fadeIn();
+});
+
+$(".chatbox-close").click(() =>
+    $(".chatbox-popup, .chatbox-close").fadeOut()
+);
+
+// $(".chatbox-maximize").click(() => {
+//   $(".chatbox-popup, .chatbox-open, .chatbox-close").fadeOut();
+//   $(".chatbox-panel").fadeIn();
+//   $(".chatbox-panel").css({
+//     display: "flex"
+//   });
+// });
+// $(".chatbox-minimize").click(() => {
+//   $(".chatbox-panel").fadeOut();
+//   $(".chatbox-popup, .chatbox-open, .chatbox-close").fadeIn();
+// });
+// $(".chatbox-panel-close").click(() => {
+//   $(".chatbox-panel").fadeOut();
+//   $(".chatbox-open").fadeIn();
+// });
+
+$('#sendBtn').on('click', (e) => {
+    $('#sendBtn').prop('disabled', true);
+    let msg = $('#messageBox').val();
+    if (msg == "" || msg.trim() == "") {
+        e.preventDefault();
+        return false;
+    } else {
+        setUserResponse(msg);
+        chat_service.sendMessage(msg);
+    }
+});
+
+$('#messageBox').on('keyup keypress', (e) => {
+    if (e.keyCode == 13) {
+        $('#sendBtn').prop('disabled', true);
+        let msg = $('#messageBox').val();
+        if (msg == "" || msg.trim() == "") {
+            e.preventDefault();
+            return false;
+        } else {
+            setUserResponse(msg);
+            chat_service.sendMessage(msg);
+        }
+    }
+    if (e.ctrlKey && e.keyCode == 13) {
+        // next line
+    }
+});
+
+$('.restart-chat').on('click', (e) => {
+    chat_service.restartChat();
+});
+
+// const CHAT = {
+//     userId: localStorage.getItem('user_unique_id') ? localStorage.getItem('user_unique_id') : '',
+//     messages: [{}],
+// }
 const botResponse = (data) => {
     let bubble = '',
         addNewClass = '';
@@ -122,11 +206,11 @@ const renderHistory = (data = []) => {
     }
 }
 
-const fallbackMessage = () => {
+const fallbackMessage = (msg = "I am facing some issues, please try again later!!!") => {
     var fallbackMsg = `<div class="message">
                             <img src="./img/bot.svg" />
                             <div class="bubble">
-                            I am facing some issues, please try again later!!!<div class="corner"></div>
+                            ${msg}<div class="corner"></div>
                             </div>
                         </div>`;
     $('#chat-messages').append(fallbackMsg).fadeIn(1000);
@@ -167,6 +251,10 @@ const hideBotTyping = () => {
     $('#botTyping').remove();
 }
 
+const removeChats = () => {
+    $('#chat-messages').children('.message').remove();
+}
+
 function renderPdfAttachment(data) {
     pdf_url = data.custom.url;
     pdf_title = data.custom.title;
@@ -181,6 +269,14 @@ function renderPdfAttachment(data) {
         '</div>'
     $("#chat-messages").append(pdf_attachment);
     scrollDown();
+}
+
+const hideWelcomeMessage = () => {
+    $('.welcome-message').removeClass('d-block').addClass('d-none');
+}
+
+const showWelcomeMessage = () => {
+    $('.welcome-message').removeClass('d-none').addClass('d-block');
 }
 
 // //============== Cards Carousel ================
@@ -295,34 +391,32 @@ function renderPdfAttachment(data) {
 // });
 
 //============== Suggestions ================
-// function addSuggestion(textToAdd) {
-//     setTimeout(function () {
-//         var suggestions = textToAdd;
-//         var suggLength = textToAdd.length;
-//         $(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo("#chat-messages").hide().fadeIn(1000);
-//         // Loop through suggestions
-//         for (i = 0; i < suggLength; i++) {
-//             $('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
-//         }
-//         scrollDown();
-//     }, 1000);
-// }
+function addSuggestion(textToAdd) {
+    setTimeout(function () {
+        var suggestions = textToAdd;
+        var suggLength = textToAdd.length;
+        $('<div class="suggestions message"><div class="menu"></div></div>').appendTo("#chat-messages").hide().fadeIn(1000);
+        // Loop through suggestions
+        for (let i = 0; i < suggLength; i++) {
+            $('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+        }
+        scrollDown();
+    }, 500);
+}
 
-// // on click of suggestions, get the value and send to rasa
-// $(document).on("click", ".menu .menuChips", function () {
-//     var text = this.innerText;
-//     var payload = this.getAttribute('data-payload');
-//     console.log("payload: ", this.getAttribute('data-payload'))
-//     setUserResponse(text);
-//     // send(payload);
-
-//     //delete the suggestions once user click on it
-//     $(".suggestions").remove();
-
-// });
+// on click of suggestions, get the value and send to rasa
+$(document).on("click", ".menu .menuChips", function () {
+    var text = this.innerText;
+    var payload = this.getAttribute('data-payload');
+    console.log("payload: ", this.getAttribute('data-payload'))
+    setUserResponse(text);
+    chat_service.sendMessage(payload);
+    //delete the suggestions once user click on it
+    $(".suggestions").remove();
+});
 
 export {
-    CHAT,
+    // CHAT,
     randomStr,
     scrollDown,
     clearMessageBox,
@@ -330,5 +424,9 @@ export {
     renderHistory,
     setUserResponse,
     showBotTyping,
-    hideBotTyping
+    hideBotTyping,
+    hideWelcomeMessage,
+    showWelcomeMessage,
+    removeChats,
+    fallbackMessage
 }
