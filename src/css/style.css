@@ -175,7 +175,7 @@ textarea::placeholder {
   width: 377px;
   background-color: #fff;
 }
-.chatbox-panel .chatbox-panel__header {
+.chatbox-panel .chatbox-settings-panel__header {
   box-sizing: border-box;
   display: -webkit-box;
   display: flex;
@@ -189,7 +189,7 @@ textarea::placeholder {
   -webkit-box-flex: 0;
   flex: 0 0 auto;
 }
-.chatbox-panel .chatbox-panel__main {
+.chatbox-panel .chatbox-settings-panel__main {
   box-sizing: border-box;
   width: 100%;
   padding: calc(2 * 16px) 16px;
@@ -199,7 +199,7 @@ textarea::placeholder {
   -webkit-box-flex: 1;
   flex: 1 1 auto;
 }
-.chatbox-panel .chatbox-panel__footer {
+.chatbox-panel .chatbox-settings-panel__footer {
   box-sizing: border-box;
   display: -webkit-box;
   display: flex;
@@ -347,31 +347,37 @@ div.message.right .corner {
 /* css for suggestions buttons */
 .suggestions {
   padding: 5px;
-  width: 50%;
+  /* width: 50%; */
   background: #ffffff;
 }
 
 .menuTitle {
-  padding: 5px;
+  padding: 0 5px 5px 5px;
   margin-top: 5px;
   margin-bottom: 5px;
 }
 
 .menu {
   padding: 5px;
+  display: flex;
+  /* flex-wrap: wrap;
+  justify-content: center; */
 }
 
 .menuChips {
   display: block;
   background: #2c53af;
   color: #fff;
-  text-align: center;
+  /* text-align: center; */
   padding: 5px;
-  margin-bottom: 5px;
+  margin: 0 5px 5px 0;
   cursor: pointer;
-  border-radius: 15px;
-  font-size: 14px;
+  border-radius: 20px;
+  font-size: 12px;
   word-wrap: break-word;
+  flex: 0 1 75px; /*  No stretching: */
+  /* flex: 1 1 150px;  Stretching: */
+  /* margin: 5px; */
 }
 
 /* css for quick replies */

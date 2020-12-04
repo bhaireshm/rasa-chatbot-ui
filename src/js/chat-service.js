@@ -44,7 +44,7 @@ export class CHATBOT_SERVICE {
                     if (msg.toLowerCase() == '/restart') {
                         removeChats();
                         showWelcomeMessage();
-                        fallbackMessage('Chat restarted');
+                        // fallbackMessage('Chat restarted');
                         console.info('User Data cleared');
 
                         //if you want the bot to start the conversation after restart

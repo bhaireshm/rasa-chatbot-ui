@@ -33,21 +33,21 @@ $(".chatbox-close").click(() =>
     $(".chatbox-popup, .chatbox-close").fadeOut()
 );
 
-// $(".chatbox-maximize").click(() => {
-//   $(".chatbox-popup, .chatbox-open, .chatbox-close").fadeOut();
-//   $(".chatbox-panel").fadeIn();
-//   $(".chatbox-panel").css({
-//     display: "flex"
-//   });
-// });
-// $(".chatbox-minimize").click(() => {
-//   $(".chatbox-panel").fadeOut();
-//   $(".chatbox-popup, .chatbox-open, .chatbox-close").fadeIn();
-// });
-// $(".chatbox-panel-close").click(() => {
-//   $(".chatbox-panel").fadeOut();
-//   $(".chatbox-open").fadeIn();
-// });
+$(".chatbox-maximize").click(() => {
+  $(".chatbox-popup, .chatbox-open, .chatbox-close").fadeOut();
+  $(".chatbox-panel").fadeIn();
+  $(".chatbox-panel").css({
+    display: "flex"
+  });
+});
+$(".chatbox-minimize").click(() => {
+  $(".chatbox-panel").fadeOut();
+  $(".chatbox-popup, .chatbox-open, .chatbox-close").fadeIn();
+});
+$(".chatbox-panel-close").click(() => {
+  $(".chatbox-panel").fadeOut();
+  $(".chatbox-open").fadeIn();
+});
 
 $('#sendBtn').on('click', (e) => {
     $('#sendBtn').prop('disabled', true);
@@ -62,7 +62,12 @@ $('#sendBtn').on('click', (e) => {
 });
 
 $('#messageBox').on('keyup keypress', (e) => {
-    if (e.keyCode == 13) {
+    // console.log(e)
+    if (e.ctrlKey && e.keyCode == 13) {
+        // next line
+        console.log('ctrl enter')
+        e.target.value += '\n';
+    } else if (e.keyCode == 13) {
         $('#sendBtn').prop('disabled', true);
         let msg = $('#messageBox').val();
         if (msg == "" || msg.trim() == "") {
@@ -73,19 +78,12 @@ $('#messageBox').on('keyup keypress', (e) => {
             chat_service.sendMessage(msg);
         }
     }
-    if (e.ctrlKey && e.keyCode == 13) {
-        // next line
-    }
 });
 
 $('.restart-chat').on('click', (e) => {
     chat_service.restartChat();
 });
 
-// const CHAT = {
-//     userId: localStorage.getItem('user_unique_id') ? localStorage.getItem('user_unique_id') : '',
-//     messages: [{}],
-// }
 const botResponse = (data) => {
     let bubble = '',
         addNewClass = '';
@@ -416,7 +414,6 @@ $(document).on("click", ".menu .menuChips", function () {
 });
 
 export {
-    // CHAT,
     randomStr,
     scrollDown,
     clearMessageBox,
